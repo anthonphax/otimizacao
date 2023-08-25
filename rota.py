@@ -18,28 +18,17 @@ aVelMedia = [
 
 def get_best_value(array, coluna_atual, type):
     arrayT = np.transpose(array)
-    print(arrayT)
     lista = []
     for i in range(len(arrayT[coluna_atual])):
         lista.append(arrayT[coluna_atual])
-    print(lista)
 
     if str(type) == 'd':
-        print('distancia')
-        return min(lista[coluna_atual])
+        return min(lista[coluna_atual]), i
     elif str(type) == 'v':
-        print('velocidade')
-        return max(lista[coluna_atual])
+        return max(lista[coluna_atual]), i
     else:
         return
 
-posicao = 1
-
-distancia = get_best_value(aDistancia, posicao, 'd')
-print(distancia)
-
-velocidade = get_best_value(aVelMedia, posicao, 'v')
-print(velocidade)
 
 
 def verify_sq(array):
@@ -59,26 +48,29 @@ def verify_sq(array):
 #     pass
 
 def build_path(array_vel, array_dist, coluna):
-    sq1, sq2  = verify_sq(array_vel), verify_sq(array_dist)
-
     tempo = []
+    sq1, sq2  = verify_sq(array_vel), verify_sq(array_dist)
 
     if sq1 and sq2:
         pos_ate_final = len(array_vel[0]) - coluna
 
         while pos_ate_final > 0:
 
-            best_vel = get_best_value(array_vel, coluna, 'v')
-            print("best_vel", best_vel)
+            best_vel, pos = get_best_value(array_vel, coluna, 'v')
+            contra = array_vel[pos]
+            best_dist, pos = get_best_value(array_dist, coluna, 'd')
+            contra2 = array_dist[pos]
 
-            best_dist = get_best_value(array_dist, coluna, 'd')
-            print("best_dist", best_dist)
-
-            tempo.append(best_dist / best_vel)
+            tempo.append(best_vel / contra)
+            tempo.append(contra2 / best_dist)
 
             coluna += 1
             pos_ate_final -= 1
 
-    return min(tempo)
+    print(tempo)
+    # return min(list(tempo))
 
+posicao = 0
+x = build_path(aVelMedia, aDistancia, posicao)
 
+print(x)
